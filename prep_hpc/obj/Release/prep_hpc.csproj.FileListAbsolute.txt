@@ -1,0 +1,5 @@
+D:\Users\jwhite\C#\prep_hpc\bin\Release\prep_hpc.exe
+D:\Users\jwhite\C#\prep_hpc\bin\Release\prep_hpc.pdb
+D:\Users\jwhite\C#\prep_hpc\obj\Release\ResolveAssemblyReference.cache
+D:\Users\jwhite\C#\prep_hpc\obj\Release\prep_hpc.exe
+D:\Users\jwhite\C#\prep_hpc\obj\Release\prep_hpc.pdb

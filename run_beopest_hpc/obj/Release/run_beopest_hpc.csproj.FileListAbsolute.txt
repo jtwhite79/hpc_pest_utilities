@@ -1,0 +1,5 @@
+D:\Users\jwhite\C#\run_beopest_hpc\bin\Release\run_beopest_hpc.exe
+D:\Users\jwhite\C#\run_beopest_hpc\bin\Release\run_beopest_hpc.pdb
+D:\Users\jwhite\C#\run_beopest_hpc\obj\Release\ResolveAssemblyReference.cache
+D:\Users\jwhite\C#\run_beopest_hpc\obj\Release\run_beopest_hpc.exe
+D:\Users\jwhite\C#\run_beopest_hpc\obj\Release\run_beopest_hpc.pdb

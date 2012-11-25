@@ -1,0 +1,5 @@
+D:\Users\jwhite\C#\cleanSweep\cleanSweep\bin\Release\cleanSweep.exe
+D:\Users\jwhite\C#\cleanSweep\cleanSweep\bin\Release\cleanSweep.pdb
+D:\Users\jwhite\C#\cleanSweep\cleanSweep\obj\Release\ResolveAssemblyReference.cache
+D:\Users\jwhite\C#\cleanSweep\cleanSweep\obj\Release\cleanSweep.exe
+D:\Users\jwhite\C#\cleanSweep\cleanSweep\obj\Release\cleanSweep.pdb

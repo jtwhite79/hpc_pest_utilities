@@ -1,0 +1,5 @@
+D:\Users\jwhite\C#\hpc_client_util\hpc_client_util\bin\Debug\hpc_client_util.exe
+D:\Users\jwhite\C#\hpc_client_util\hpc_client_util\bin\Debug\hpc_client_util.pdb
+D:\Users\jwhite\C#\hpc_client_util\hpc_client_util\obj\Debug\ResolveAssemblyReference.cache
+D:\Users\jwhite\C#\hpc_client_util\hpc_client_util\obj\Debug\hpc_client_util.exe
+D:\Users\jwhite\C#\hpc_client_util\hpc_client_util\obj\Debug\hpc_client_util.pdb
