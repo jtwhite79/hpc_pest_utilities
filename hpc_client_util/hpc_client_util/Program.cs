@@ -118,6 +118,7 @@ namespace hpc_client_util
                 catch (Exception e)
                 {
                     Console.WriteLine("Unable to get file list from src - check src path: " + srcFolderPath);
+                    Console.WriteLine(e);
                     return;
                 }
 
@@ -208,6 +209,7 @@ namespace hpc_client_util
             string[] slaveDirs = new string[Math.Abs(coreCount)];
             string currentCpu;
             string currentRam;
+            string hostname = Environment.MachineName;
             for (int i = 1; i <= Math.Abs(coreCount); i++)
             {
                 //write out the current system utilization
@@ -216,7 +218,7 @@ namespace hpc_client_util
                 Console.WriteLine("Slave " + i + " cpu usage: " + currentCpu + " ram usage: " + currentRam);
 
                 //build current slave folder
-                string thisSlaveDir = localPath + @"\slave" + i.ToString();
+                string thisSlaveDir = localPath + @"\" + hostname + "_" + i.ToString();
 
                 if (destinationPath != null)
                 {
