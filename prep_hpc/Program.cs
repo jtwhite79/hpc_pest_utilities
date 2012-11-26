@@ -41,10 +41,12 @@ namespace prep_hpc
             string nodeFile = null;
             //cluster UNC name
             string clusterName = null;
-            
+
+            bool updateOnly = false;
+
 
             if (parse_cmd_args(args, ref filePath, ref nodeFile, ref nodeDir,
-                               ref clusterName, ref userName, ref password) == false)
+                               ref clusterName, ref userName, ref password,ref updateOnly) == false)
             {
                 Console.WriteLine("parse cmd args fail...");
                 Console.WriteLine("required commandline args: -filePath:path to folder with complete set of files");
@@ -231,8 +233,6 @@ namespace prep_hpc
             {
                 return;
             }
-           
-            
             return;
        }
 
@@ -352,7 +352,7 @@ namespace prep_hpc
         public static bool parse_cmd_args(string[] args, ref string filePath,
                                           ref string nodeFile, ref string nodeDir,
                                           ref string clusterName, ref string userName,
-                                          ref string password)
+                                          ref string password, ref bool updateOnly)
         {
             string tag = null;
             string cmd = null;
@@ -430,7 +430,10 @@ namespace prep_hpc
                 {
                     password = cmd;
                 }
-                
+                else if (String.Compare(tag, "updateOnly", true) == 0)
+                {
+                    updateOnly = true;
+                }
                 else
                 {
                     Console.WriteLine("Unrecognized tag: " + tag);

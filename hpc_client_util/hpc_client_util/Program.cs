@@ -28,18 +28,21 @@ namespace hpc_client_util
             string cmd = null;
             int coreCount = -999;
             bool rmDir = false;
+            bool updateOnly = false;
 
              if (parse_cmd_args(args, ref srcFolderPath, ref coreCount, ref commandLineArgs,
-                                          ref commandLineExec, ref destinationPath, ref rmDir, ref slavePath) == false)                                   
+                                          ref commandLineExec, ref destinationPath, ref rmDir,
+                                          ref slavePath, ref updateOnly) == false)                                   
             {
                 Console.WriteLine("parse cmd args fail...");
                 Console.WriteLine("commandline args:    -cmdExec:command to execute (not passed = copy files only ");
                 Console.WriteLine("                     -cmdArgs:commandline arguments to pass to cmdExec");
-                Console.WriteLine("                     -src:sourceFilePath (\".\\localMaster\")");
-                Console.WriteLine("                     -dest:destinationPath (\"slavei\""); 
+                Console.WriteLine("                     -src:sourceFolderPath (\".\\)");
+                Console.WriteLine("                     -dest:destinationPath (\"slave<i>\""); 
                 Console.WriteLine("                     -n:numLocalSlaves (num cores)");
-                Console.WriteLine("                     -rmDir\n");
-                Console.WriteLine("                     -slavePath (.\\)\n");
+                Console.WriteLine("                     -rmDir (true)\n");
+                Console.WriteLine("                     -slavePath (.\\)");
+                Console.WriteLine("                     -updateOnly (false)\n");
                 Console.WriteLine("where           n = 0 makes only a local master copy");
                 Console.WriteLine("                n = -(num_slaves) uses existing \"n\" folders");
                 Console.WriteLine("                cmdExec = -(num_slaves) uses existing \"n\" folders");
@@ -47,6 +50,7 @@ namespace hpc_client_util
                 Console.WriteLine("                dest != null resets n to 1 and requires src != null (for sweeps");
                 Console.WriteLine("                rmDir removes the slav dir on completion (for sweeps");
                 Console.WriteLine("                slavePath is the path to the working dir within slave folder");
+                Console.WriteLine("                updateOnly only copies files that are newer than existing files");
                 return;
             }
 
@@ -117,30 +121,42 @@ namespace hpc_client_util
                     return;
                 }
 
-                //Check to see if local master exists - if so, remove           
-                if (Directory.Exists(localMasterPath))
+                //Check to see if local master exists 
+                if (!updateOnly)
                 {
-                    Directory.Delete(localMasterPath, true);
-                    Console.WriteLine("Removing local master dir...");
+                    if (Directory.Exists(localMasterPath))
+                    {
+                        Directory.Delete(localMasterPath, true);
+                        Console.WriteLine("Removing local master dir...");
+                    }
+
+                    // Make the local master folder.
+                    try
+                    {
+                        Directory.CreateDirectory(localMasterPath);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Unable to create local datafile directory: " + localMasterPath);
+                        Console.WriteLine(e);
+                        return;
+                    }
                 }
 
-                // Make the local master folder.
-                try
+                else
                 {
-                    Directory.CreateDirectory(localMasterPath);
+                    if (!Directory.Exists(localMasterPath))
+                    {
+                        throw new DirectoryNotFoundException("localMasterPath " + localMasterPath + " not found for updating");
+                    }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unable to create local datafile directory: " + localMasterPath);
-                    Console.WriteLine(e);
-                    return;
-                }
+
 
                 //Copy one set of datafiles to this node from master folder
                 try
                 {
 
-                    copy_folder(srcFolderPath, localMasterPath);
+                    copy_folder(srcFolderPath, localMasterPath,updateOnly);
                     Console.WriteLine("Successful Copy from master to local...");
                 }
                 catch (Exception e)
@@ -248,7 +264,7 @@ namespace hpc_client_util
                         try
                         {
                             Console.WriteLine("Copying from localMaster to " + thisSlaveDir);
-                            copy_folder(localMasterPath, thisSlaveDir);
+                            copy_folder(localMasterPath, thisSlaveDir,false);
                         }
                         catch (Exception e)
                         {
@@ -357,7 +373,6 @@ namespace hpc_client_util
                             Console.WriteLine("Unable to remove slaveDir: " + slaveDirs[i - 1]);
                         }
                     }
-
                 }
                 if (found == false)
                 {
@@ -366,21 +381,54 @@ namespace hpc_client_util
             }
         }
 
-        public static void copy_folder(string sourceFolder, string destFolder)
+        public static void copy_folder(string sourceFolder, string destFolder, bool updateOnly)
         {
             //if the destination folder doesn't exists, make it
             if (!Directory.Exists(destFolder))
+                if (updateOnly) throw new FileNotFoundException("Cannot find dest folder "+destFolder+" to update files");
                 Directory.CreateDirectory(destFolder);
 
             //get a list of the current dir level files
             string[] files = Directory.GetFiles(sourceFolder);
 
+
+            //save some time, rather than create temporaries inside the loop
+            DateTime src_crt, dest_crt, src_mod, dest_mod;
+            DateTime src_max, dest_max;
             //loop over each file
             foreach (string file in files)
             {
                 string name = Path.GetFileName(file);
                 string dest = Path.Combine(destFolder, name);
-                File.Copy(file, dest);
+                if (updateOnly)
+                {
+                    //check if the dest file exists
+                    if (File.Exists(dest))
+                    {
+                        //get the source and dest file write attributes
+                        src_crt = File.GetCreationTimeUtc(file);
+                        src_mod = File.GetLastWriteTimeUtc(file);
+                        if (src_mod > src_crt) src_max = src_mod;
+                        else src_max = src_crt;
+
+                        dest_crt = File.GetCreationTimeUtc(dest);
+                        dest_mod = File.GetLastWriteTimeUtc(dest);
+                        if (dest_mod > dest_crt) dest_max = dest_mod;
+                        else dest_max = dest_crt;
+                        if (src_max > dest_max)
+                        {
+                            File.Copy(file, dest, true);
+                        }
+                    }
+                    else
+                    {
+                        File.Copy(file, dest);
+                    }
+                }
+                else
+                {
+                    File.Copy(file, dest);
+                }
             }
             //get a list of the current dir level folders
             string[] folders = Directory.GetDirectories(sourceFolder);
@@ -392,11 +440,12 @@ namespace hpc_client_util
                 string dest = Path.Combine(destFolder, name);
 
                 //recursively copy each file/folder
-                copy_folder(folder, dest);
+                copy_folder(folder, dest, updateOnly);
             }
         }
         public static bool parse_cmd_args(string[] args, ref string srcFolderPath, ref int coreCount, ref string commandLineArgs,
-                                          ref string commandLineExec, ref string destinationPath, ref bool rmDir, ref string slavePath)
+                                          ref string commandLineExec, ref string destinationPath, ref bool rmDir,
+                                          ref string slavePath, ref bool updateOnly)
         {
             string tag = null;
             string cmd = null;
@@ -481,6 +530,10 @@ namespace hpc_client_util
                 else if (String.Compare(tag, "slavePath", true) == 0)
                 {
                     slavePath = cmd;
+                }
+                else if (String.Compare(tag, "updateOnly", true) == 0)
+                {
+                    updateOnly = true;
                 }
 
                 else

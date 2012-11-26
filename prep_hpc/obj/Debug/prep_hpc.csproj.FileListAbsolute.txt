@@ -5,3 +5,6 @@ D:\Users\jwhite\C#\prep_hpc\bin\Debug\Microsoft.Hpc.Scheduler.Internal.dll
 D:\Users\jwhite\C#\prep_hpc\bin\Debug\Microsoft.Hpc.VSAddin.Deployment.dll
 D:\Users\jwhite\C#\prep_hpc\obj\Debug\prep_hpc.exe
 D:\Users\jwhite\C#\prep_hpc\obj\Debug\prep_hpc.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Debug\prep_hpc.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Debug\prep_hpc.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Debug\prep_hpc.csprojResolveAssemblyReference.cache
