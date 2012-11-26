@@ -122,15 +122,16 @@ namespace hpc_client_util
                 }
 
                 //Check to see if local master exists 
-                if (!updateOnly)
+                
+                if ((!updateOnly) && (Directory.Exists(localMasterPath)))
                 {
-                    if (Directory.Exists(localMasterPath))
-                    {
-                        Directory.Delete(localMasterPath, true);
-                        Console.WriteLine("Removing local master dir...");
-                    }
+                    Directory.Delete(localMasterPath, true);
+                    Console.WriteLine("Removing local master dir...");
+                }
 
-                    // Make the local master folder.
+                // Make the local master folder.
+                if (!Directory.Exists(localMasterPath))
+                {
                     try
                     {
                         Directory.CreateDirectory(localMasterPath);
@@ -142,6 +143,7 @@ namespace hpc_client_util
                         return;
                     }
                 }
+
 
                 else
                 {
@@ -227,7 +229,7 @@ namespace hpc_client_util
                 {
 
                     //if current slave folder exists, remove it
-                    if (Directory.Exists(thisSlaveDir))
+                    if ((!updateOnly) && (Directory.Exists(thisSlaveDir)))
                     {
                         try
                         {
@@ -244,7 +246,7 @@ namespace hpc_client_util
                     }
 
                     //create a folder for current slave
-                    if (success == true)
+                    if ((success == true) && (!Directory.Exists(thisSlaveDir)))
                     {
                         try
                         {
@@ -264,7 +266,7 @@ namespace hpc_client_util
                         try
                         {
                             Console.WriteLine("Copying from localMaster to " + thisSlaveDir);
-                            copy_folder(localMasterPath, thisSlaveDir,false);
+                            copy_folder(localMasterPath, thisSlaveDir,updateOnly);
                         }
                         catch (Exception e)
                         {
@@ -344,7 +346,7 @@ namespace hpc_client_util
                 return;
             }
 
-            //if all slaves started successfully, the infintely loop
+            //if all slaves started successfully, then infintely loop
             while (success == true)
             {
                 bool found = false;
@@ -385,7 +387,7 @@ namespace hpc_client_util
         {
             //if the destination folder doesn't exists, make it
             if (!Directory.Exists(destFolder))
-                if (updateOnly) throw new FileNotFoundException("Cannot find dest folder "+destFolder+" to update files");
+                //if (updateOnly) throw new FileNotFoundException("Cannot find dest folder "+destFolder+" to update files");
                 Directory.CreateDirectory(destFolder);
 
             //get a list of the current dir level files

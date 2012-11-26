@@ -5,7 +5,7 @@
     <StartArguments>-cmdExec:PEST\Make_Control_File\beopest64.exe -cmdArgs:" mcr.pst /h IGSBABEWLT110:4004" -n:1</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartArguments>-n:1 -src:source -dest:dest -updateOnly</StartArguments>
+    <StartArguments>-n:1 -src:source  -updateOnly</StartArguments>
     <StartWorkingDirectory>D:\Users\jwhite\git_repo\hpc_pest_utilities\hpc_client_util\testing\</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup>
