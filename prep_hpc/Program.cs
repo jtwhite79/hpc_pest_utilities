@@ -50,12 +50,13 @@ namespace prep_hpc
             {
                 Console.WriteLine("parse cmd args fail...");
                 Console.WriteLine("required commandline args: -filePath:path to folder with complete set of files");
-                Console.WriteLine("                           -nodeDir:root dir on the compute nodes");
+                Console.WriteLine("                           -nodeDir:working dir on the compute nodes");
                 Console.WriteLine("                           -userName: domain user name");
                 //Console.WriteLine("                           -password: domain password");
                 Console.WriteLine("\noptional (default)       -nodeFile:file with node UNC name(s) to use(all)");                
                 Console.WriteLine("                              negative for numCores less than max ");
                 Console.WriteLine("                           -clusterName:cluster UNC name (babeshn010)");
+                Console.WriteLine("                           -updateOnly:updates existing dir structure with new files");
                 return;
             }
             //set clusterName
@@ -185,40 +186,48 @@ namespace prep_hpc
                 Console.WriteLine("no usable compute nodes found");
                 return;
             }
-            
-            //first remove existing node dir
-            //
-            bool success = true;
-            string[] oneDirLevelUp = get_up_level_dir(nodeDir);                        
-            string task = @"rmdir "+oneDirLevelUp[1]+" /S /Q";
-            Console.WriteLine("removing (possibly) existing nodeDir");            
-            success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes,userName, password,true);
-            if (success == false)
+            string task,localHost;
+            bool success;
+            localHost = Environment.MachineName;
+            string[] oneDirLevelUp = get_up_level_dir(nodeDir);
+            if (!updateOnly)
             {
-                return;
-            }
-            
-            //now make the dir
-            //
-            
-            task = @"mkdir " + oneDirLevelUp[1];
-            Console.WriteLine("making new nodeDir");
-            success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true);
-            if (success == false)
-            {
-                return;
-            }
+                //first remove existing node dir
+                //
+                success = true;
+                
+                task = @"rmdir " + oneDirLevelUp[1] + " /S /Q";
+                Console.WriteLine("removing (possibly) existing nodeDir");
+                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true);
+                if (success == false)
+                {
+                    return;
+                }
 
-            //now copy client to slaves
-            //
-            string localHost = Environment.MachineName;
-            string clientUnc = get_master_unc(localHost, clientPath);
-            task = @"copy " + clientUnc;
-            Console.WriteLine("Copying client to nodes");
-            success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, true);
-            if (success == false)
-            {                
-                return;
+                //now make the dir
+                //
+                task = @"mkdir " + oneDirLevelUp[1];
+                Console.WriteLine("making new nodeDir");
+                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true);
+                if (success == false)
+                {
+                    return;
+                }
+
+                //now copy client to slaves
+                //          
+                string clientUnc = get_master_unc(localHost, clientPath);
+                task = @"copy " + clientUnc;
+                Console.WriteLine("Copying client to nodes");
+                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, true);
+                if (success == false)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                Console.WriteLine("using existing directory structure, updating files only...");
             }
 
             //now finally run client to make one localMaster copy
@@ -228,6 +237,7 @@ namespace prep_hpc
 
             task = clientExe+" -src:" + masterUnc + " ";
             task = task + " -n:0";
+            if (updateOnly) task = task + " -updateOnly";
             success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false);
             if (success == false)
             {

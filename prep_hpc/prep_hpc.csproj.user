@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartArguments>-filePath:test -nodeDir:c:\users\home\white\agu2011 -userName:test1 -password:test1</StartArguments>
+    <StartArguments>-filePath:source -nodeDir:c:\users\home\white\agu2011 -userName:test1 -password:test1</StartArguments>
+    <StartWorkingDirectory>D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\testing\</StartWorkingDirectory>
   </PropertyGroup>
 </Project>

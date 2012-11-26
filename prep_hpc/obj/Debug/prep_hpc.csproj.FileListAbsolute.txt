@@ -7,4 +7,6 @@ D:\Users\jwhite\C#\prep_hpc\obj\Debug\prep_hpc.exe
 D:\Users\jwhite\C#\prep_hpc\obj\Debug\prep_hpc.pdb
 D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Debug\prep_hpc.exe
 D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Debug\prep_hpc.pdb
-D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Debug\prep_hpc.csprojResolveAssemblyReference.cache
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Debug\prep_hpc.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Debug\prep_hpc.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Debug\ResolveAssemblyReference.cache
