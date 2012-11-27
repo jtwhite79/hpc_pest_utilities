@@ -4,6 +4,6 @@ OPEN/CLOSE modref\ibound_1.ref             1 (FREE)               -1 IBOUND Arra
 OPEN/CLOSE modref\ibound_2.ref             1 (FREE)               -1 IBOUND Array for Layer
 OPEN/CLOSE modref\ibound_3.ref             1 (FREE)               -1 IBOUND Array for Layer
 10000000000.000000
-OPEN/CLOSE modref\strt_1.ref               1 (FREE)               -1 Starting Heads in Layer
+OPEN/CLOSE modref\strt_1.re   f               1 (FREE)               -1 Starting Heads in Layer
 OPEN/CLOSE modref\strt_2.ref               1 (FREE)               -1 Starting Heads in Layer
 OPEN/CLOSE modref\strt_3.ref               1 (FREE)               -1 Starting Heads in Layer
