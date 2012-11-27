@@ -227,7 +227,7 @@ namespace prep_hpc
             }
             else
             {
-                Console.WriteLine("using existing directory structure, updating files only...");
+                Console.WriteLine("using existing directory structure and hpc_client_util, updating files only...");
             }
 
             //now finally run client to make one localMaster copy
