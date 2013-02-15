@@ -3,3 +3,16 @@ D:\Users\jwhite\C#\run_beopest_hpc\bin\Debug\run_beopest_hpc.pdb
 D:\Users\jwhite\C#\run_beopest_hpc\obj\Debug\ResolveAssemblyReference.cache
 D:\Users\jwhite\C#\run_beopest_hpc\obj\Debug\run_beopest_hpc.exe
 D:\Users\jwhite\C#\run_beopest_hpc\obj\Debug\run_beopest_hpc.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\obj\Debug\run_beopest_hpc.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\obj\Debug\run_beopest_hpc.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\run_beopest_hpc.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\run_beopest_hpc.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\Microsoft.Hpc.Scheduler.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\Microsoft.Hpc.Scheduler.Internal.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\Microsoft.Hpc.Scheduler.Properties.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\Microsoft.Hpc.Scheduler.Session.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\Microsoft.Hpc.VSAddin.Deployment.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\Microsoft.Hpc.Scheduler.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\Microsoft.Hpc.Scheduler.Properties.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Debug\Microsoft.Hpc.Scheduler.Session.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\obj\Debug\run_beopest_hpc.csprojResolveAssemblyReference.cache
