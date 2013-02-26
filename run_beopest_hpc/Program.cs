@@ -138,14 +138,14 @@ namespace run_beopest_hpc
             }
 
             //set numCores
-            if (numCores == -999)
-            {
-                numCores = Environment.ProcessorCount;
-            }
-            else if (numCores < 0)
-            {
-                numCores = Environment.ProcessorCount - numCores;
-            }
+            //if (numCores == -999)
+            //{
+            //    numCores = Environment.ProcessorCount;
+            //}
+            //else if (numCores < 0)
+            //{
+            //    numCores = Environment.ProcessorCount - numCores;
+            //}
 
             //setup master dir           
             string currentDir = Directory.GetCurrentDirectory();
@@ -422,7 +422,11 @@ namespace run_beopest_hpc
                 if (execArgs == null)
                     execArgs = " " + pestCase + " /h " + localHost + ":" + portNum;
 
-                task = clientExe + " -src:" + masterUnc + " -n:" + numCores;
+                task = clientExe + " -src:" + masterUnc;
+                if (numCores != -999)
+                {
+                    task = task + " -n:" + numCores;
+                }
                 task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"";                
                 success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-run");
                 if (success == false)
