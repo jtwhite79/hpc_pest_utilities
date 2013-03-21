@@ -460,7 +460,11 @@ namespace run_beopest_hpc
                     execArgs = " " + pestCase + " /h " + localHost + ":" + portNum;
 
                 task = clientExe;
-                task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"" + " -updateOnly -n:" + numCores;
+                task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"" + " -updateOnly";
+                if (numCores != -999)
+                {
+                    task = task + " -n:" + numCores;
+                }
                 success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-updateAndRun");
                 if (success == false)
                 {

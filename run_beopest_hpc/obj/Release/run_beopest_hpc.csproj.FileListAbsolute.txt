@@ -16,3 +16,8 @@ D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Release\Microsof
 D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Release\Microsoft.Hpc.Scheduler.Properties.xml
 D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Release\Microsoft.Hpc.Scheduler.Session.xml
 D:\Users\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\obj\Release\run_beopest_hpc.csprojResolveAssemblyReference.cache
+C:\Home\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\obj\Release\run_beopest_hpc.exe
+C:\Home\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\obj\Release\run_beopest_hpc.pdb
+C:\Home\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Release\run_beopest_hpc.exe
+C:\Home\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\bin\Release\run_beopest_hpc.pdb
+C:\Home\jwhite\git_repo\hpc_pest_utilities\run_beopest_hpc\obj\Release\run_beopest_hpc.csprojResolveAssemblyReference.cache
