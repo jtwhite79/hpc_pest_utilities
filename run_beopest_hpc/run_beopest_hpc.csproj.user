@@ -6,6 +6,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
     <StartWorkingDirectory>\\igsbamewms151\home\jwhite\beopest_test\</StartWorkingDirectory>
-    <StartArguments>-noMaster -filePath:_paired_1 -nodeDir:C:\home\jwhite\test -pestCase:this -userName:jwhite -clusterName:IGSBAMEWMS151 -execName:beopest64.exe -updateOnly</StartArguments>
+    <StartArguments>-noMaster -filePath:_paired_1 -nodeDir:C:\home\jwhite\test -pestCase:this -userName:jwhite -clusterName:IGSBAMEWMS151 -execName:beopest64.exe -updateOnly -numCores:h</StartArguments>
   </PropertyGroup>
 </Project>

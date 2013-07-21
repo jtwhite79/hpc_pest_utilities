@@ -38,16 +38,12 @@ namespace hpc_client_util
                 Console.WriteLine("commandline args:    -cmdExec:command to execute (not passed = copy files only ");
                 Console.WriteLine("                     -cmdArgs:commandline arguments to pass to cmdExec");
                 Console.WriteLine("                     -src:sourceFolderPath (\".\\)");
-                Console.WriteLine("                     -dest:destinationPath (\"slave<i>\""); 
                 Console.WriteLine("                     -n:numLocalSlaves (num cores)");
                 Console.WriteLine("                     -rmDir (true)\n");
                 Console.WriteLine("                     -slavePath (.\\)");
                 Console.WriteLine("                     -updateOnly (false)\n");
                 Console.WriteLine("where           n = 0 makes only a local master copy");
-                Console.WriteLine("                n = -(num_slaves) uses existing \"n\" folders");
-                Console.WriteLine("                cmdExec = -(num_slaves) uses existing \"n\" folders");
-                Console.WriteLine("                src = null uses existing \".\\localMaster\" folder");
-                Console.WriteLine("                dest != null resets n to 1 and requires src != null (for sweeps");
+                Console.WriteLine("                n < 0 num of cores less than total  \"n\" folders");
                 Console.WriteLine("                rmDir removes the slav dir on completion (for sweeps");
                 Console.WriteLine("                slavePath is the path to the working dir within slave folder");
                 Console.WriteLine("                updateOnly only copies files that are newer than existing files");
@@ -60,7 +56,10 @@ namespace hpc_client_util
             {
                 coreCount = Environment.ProcessorCount;
             }
-
+            else if (coreCount == -100)
+            {
+                coreCount = Environment.ProcessorCount / 2;
+            }
             //some screen output
             if (commandLineExec == null)
             {
@@ -508,7 +507,7 @@ namespace hpc_client_util
                 //else if (tag == "n")
                 else if (String.Compare(tag,"n",true) == 0)
                 {
-                    coreCount = int.Parse(cmd);
+                    coreCount = int.Parse(cmd);                 
                 }
                 //else if (tag == "cmdExec")
                 else if (String.Compare(tag, "cmdExec", true) == 0)

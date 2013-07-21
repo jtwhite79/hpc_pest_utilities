@@ -845,9 +845,16 @@ namespace run_beopest_hpc
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Unable to parse numCores argument to int: " + cmd);
-                        Console.WriteLine(e);
-                        return false;
+                        if ((cmd == "h") || (cmd == "H"))
+                        {
+                            numCores = -100;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unable to parse numCores argument to int: " + cmd);
+                            Console.WriteLine(e);
+                            return false;
+                        }
                     }
                 }
 
