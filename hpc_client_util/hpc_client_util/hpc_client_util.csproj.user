@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <StartWorkingDirectory>D:\Users\jwhite\personal\for_eric\</StartWorkingDirectory>
-    <StartArguments>-cmdExec:PEST\Make_Control_File\beopest64.exe -cmdArgs:" mcr.pst /h IGSBABEWLT110:4004" -n:h</StartArguments>
+    <StartArguments>-cmdExec:PEST\Make_Control_File\beopest64.exe -cmdArgs:" mcr.pst /h IGSBABEWLT110:4004" -n:-100</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartArguments>-n:1 -src:source  -updateOnly</StartArguments>

@@ -60,6 +60,18 @@ namespace hpc_client_util
             {
                 coreCount = Environment.ProcessorCount / 2;
             }
+            else if (coreCount < 0)
+            {
+                coreCount = Environment.ProcessorCount - coreCount;
+            }
+
+            if (coreCount <= 0)
+            {
+                Console.WriteLine("ERROR - coreCount less than 1: " + coreCount);
+                return;
+            }
+
+
             //some screen output
             if (commandLineExec == null)
             {

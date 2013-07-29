@@ -55,10 +55,12 @@ namespace run_beopest_hpc
             bool masterFlag = true;
             //flag to use existing node-side slave dirs
             bool updateOnly = false;               
+            //flag for debugging - pauses after each job is submitted
+            bool jobWait = false;
 
             if (parse_cmd_args(args, ref filePath, ref masterDir, ref nodeFile, ref nodeDir,ref execName,
                                ref numCores, ref pestCase,ref portNum, ref clientExe, ref clientArgs,
-                               ref clusterName, ref userName, ref password, ref delay, ref masterFlag, ref updateOnly) == false)
+                               ref clusterName, ref userName, ref password, ref delay, ref masterFlag, ref updateOnly, ref jobWait) == false)
             {
                 Console.WriteLine("parse cmd args fail...");
                 Console.WriteLine("required commandline args: -filePath:path to folder with complete set of files");
@@ -387,6 +389,12 @@ namespace run_beopest_hpc
                     Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
+                if (jobWait)
+                {
+                    Console.WriteLine("hit any key to continue");
+                    Console.ReadKey();
+                }
+
 
                 //now make the dir
                 //
@@ -400,7 +408,11 @@ namespace run_beopest_hpc
                     Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-
+                if (jobWait)
+                {
+                    Console.WriteLine("hit any key to continue");
+                    Console.ReadKey();
+                }
                 //now copy hpc_client_util to slaves
                 //
                 
@@ -414,7 +426,11 @@ namespace run_beopest_hpc
                     Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-
+                if (jobWait)
+                {
+                    Console.WriteLine("hit any key to continue");
+                    Console.ReadKey();
+                }
                 //start the slaves on each node
                 //               
                 Console.WriteLine("starting client util");
@@ -435,7 +451,11 @@ namespace run_beopest_hpc
                     Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-            
+                if (jobWait)
+                {
+                    Console.WriteLine("hit any key to continue");
+                    Console.ReadKey();
+                }
             }
             else
             {
@@ -738,7 +758,8 @@ namespace run_beopest_hpc
                                           ref string clientExe, ref string clientArgs,
                                           ref string clusterName, ref string userName,
                                           ref string password, ref int delay, 
-                                          ref bool masterFlag, ref bool updateOnly)
+                                          ref bool masterFlag, ref bool updateOnly,
+                                          ref bool jobWait)
         {
             string tag = null;
             string cmd = null;
@@ -861,7 +882,7 @@ namespace run_beopest_hpc
                         }
                     }
                 }
-
+                
                 //else if (tag == "delay")
                 else if (String.Compare(tag,"delay",true) == 0)
                 {
@@ -902,6 +923,10 @@ namespace run_beopest_hpc
                     updateOnly = true;
                 }
 
+                else if (String.Compare(tag, "jobWait", true) == 0)
+                {
+                    jobWait = true;
+                }
 
 
                 else
