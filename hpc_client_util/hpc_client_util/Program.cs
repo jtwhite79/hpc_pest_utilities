@@ -62,8 +62,14 @@ namespace hpc_client_util
             }
             else if (coreCount < 0)
             {
-                coreCount = Environment.ProcessorCount - coreCount;
+                coreCount = Environment.ProcessorCount + coreCount;
             }
+
+            if (coreCount > Environment.ProcessorCount)
+            {
+                Console.WriteLine("Warning - coreCount greater than number of processors: " + coreCount);
+            }
+
 
             if (coreCount <= 0)
             {
