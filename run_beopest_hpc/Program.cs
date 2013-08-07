@@ -295,6 +295,7 @@ namespace run_beopest_hpc
                 // Make the scheduler and connect to the local host.
                 scheduler = new Scheduler();
                 scheduler.Connect(clusterName);
+                scheduler.SetClusterParameter("AffinityType", "NoJobs");
             }
             catch (Exception e)
             {
@@ -550,7 +551,8 @@ namespace run_beopest_hpc
 
                     job = scheduler.CreateJob();
                     job.UnitType = JobUnitType.Node;
-                    job.IsExclusive = true;                    
+                    job.IsExclusive = true;  
+                   
                     StringCollection nodes = new StringCollection() { node };
                     Console.WriteLine("    node: " + node);
                     job.RequestedNodes = nodes;

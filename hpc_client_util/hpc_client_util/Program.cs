@@ -14,6 +14,8 @@ namespace hpc_client_util
 {
     class Program
     {
+        
+       
         static void Main(string[] args)
         {
             Console.WriteLine("**********hpc_client_util v0.1**********");
@@ -29,10 +31,31 @@ namespace hpc_client_util
             int coreCount = -999;
             bool rmDir = false;
             bool updateOnly = false;
+            bool tryAffinity = true;
+            List<int> affinity = new List<int>()
+            {
+                Convert.ToInt32("0000000000000001", 2),
+                Convert.ToInt32("0000000000000010", 2),
+                Convert.ToInt32("0000000000000100", 2),                                   
+                Convert.ToInt32("0000000000001000", 2),
+                Convert.ToInt32("0000000000010000", 2),
+                Convert.ToInt32("0000000000100000", 2),
+                Convert.ToInt32("0000000001000000", 2),
+                Convert.ToInt32("0000000010000000", 2),
+                Convert.ToInt32("0000000100000000", 2),
+                Convert.ToInt32("0000001000000000", 2),
+                Convert.ToInt32("0000010000000000", 2),
+                Convert.ToInt32("0000100000000000", 2),
+                Convert.ToInt32("0001000000000000", 2),
+                Convert.ToInt32("0010000000000000", 2),
+                Convert.ToInt32("0100000000000000", 2),
+                Convert.ToInt32("1000000000000000", 2),
+            };
+
 
              if (parse_cmd_args(args, ref srcFolderPath, ref coreCount, ref commandLineArgs,
                                           ref commandLineExec, ref destinationPath, ref rmDir,
-                                          ref slavePath, ref updateOnly) == false)                                   
+                                          ref slavePath, ref updateOnly, ref tryAffinity) == false)                                   
             {
                 Console.WriteLine("parse cmd args fail...");
                 Console.WriteLine("commandline args:    -cmdExec:command to execute (not passed = copy files only ");
@@ -218,6 +241,9 @@ namespace hpc_client_util
             PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             PerformanceCounter ramCounter = new PerformanceCounter("Memory", "Available MBytes");
 
+            
+
+
 
 
             //loop over each core on this slave node
@@ -339,16 +365,20 @@ namespace hpc_client_util
 
 
                         //set processor affinity
-                        /*try
+                        if (tryAffinity)
                         {
-                            thisSlave.ProcessorAffinity = (System.IntPtr)i;
+                            try
+                            {
+                                thisSlave.ProcessorAffinity = (System.IntPtr)affinity[i];
+                                Console.WriteLine("Current slave affinity to processor: {0}", thisSlave.ProcessorAffinity);
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Unable to set affinity for slave: " + thisSlaveDir);
+                            }
                         }
-                        catch
-                        {
-                            Console.WriteLine("Unable to set affinity for slave: " + thisSlaveDir + " to: {0}", i);
-                        }
-                        */
-                        //Console.WriteLine("Current slave affinity to processor: {0}", thisSlave.ProcessorAffinity);
+                        
+                        
 
                     }
                     catch (Exception e)
@@ -466,7 +496,7 @@ namespace hpc_client_util
         }
         public static bool parse_cmd_args(string[] args, ref string srcFolderPath, ref int coreCount, ref string commandLineArgs,
                                           ref string commandLineExec, ref string destinationPath, ref bool rmDir,
-                                          ref string slavePath, ref bool updateOnly)
+                                          ref string slavePath, ref bool updateOnly, ref bool tryAffinity)
         {
             string tag = null;
             string cmd = null;
@@ -555,6 +585,10 @@ namespace hpc_client_util
                 else if (String.Compare(tag, "updateOnly", true) == 0)
                 {
                     updateOnly = true;
+                }
+                else if (String.Compare(tag, "tryAffinity", true) == 0)
+                {
+                    tryAffinity = true;
                 }
 
                 else
