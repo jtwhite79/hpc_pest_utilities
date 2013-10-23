@@ -567,7 +567,16 @@ namespace run_beopest_hpc
                     scheduler.SubmitJob(job, userName, password);
 
                 }
-                
+                if (waitFlag)
+                {
+                    Console.WriteLine("Waiting for job to finish...");
+                    while (job.State != JobState.Finished)
+                    {
+                        System.Threading.Thread.Sleep(5000);                        
+
+                    }
+                }
+
                 //manualEvent.WaitOne();
                 return true;
             }
