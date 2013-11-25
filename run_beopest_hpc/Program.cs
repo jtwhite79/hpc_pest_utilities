@@ -57,10 +57,13 @@ namespace run_beopest_hpc
             bool updateOnly = false;               
             //flag for debugging - pauses after each job is submitted
             bool jobWait = false;
+            //flag to remove working dirs when finished
+            bool remove = false;
 
             if (parse_cmd_args(args, ref filePath, ref masterDir, ref nodeFile, ref nodeDir,ref execName,
                                ref numCores, ref pestCase,ref portNum, ref clientExe, ref clientArgs,
-                               ref clusterName, ref userName, ref password, ref delay, ref masterFlag, ref updateOnly, ref jobWait) == false)
+                               ref clusterName, ref userName, ref password, ref delay, ref masterFlag, 
+                               ref updateOnly, ref jobWait, ref remove) == false)
             {
                 Console.WriteLine("parse cmd args fail...");
                 Console.WriteLine("required commandline args: -filePath:path to folder with complete set of files");
@@ -444,6 +447,11 @@ namespace run_beopest_hpc
                 {
                     task = task + " -n:" + numCores;
                 }
+                if (remove)
+                {
+                    task = task + "-rmDir";
+                }
+                   
                 task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"";                
                 success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-run");
                 if (success == false)
@@ -770,7 +778,7 @@ namespace run_beopest_hpc
                                           ref string clusterName, ref string userName,
                                           ref string password, ref int delay, 
                                           ref bool masterFlag, ref bool updateOnly,
-                                          ref bool jobWait)
+                                          ref bool jobWait, ref bool remove)
         {
             string tag = null;
             string cmd = null;
@@ -939,6 +947,10 @@ namespace run_beopest_hpc
                     jobWait = true;
                 }
 
+                else if (String.Compare(tag, "remove", true) == 0)
+                {
+                    remove = true;
+                }
 
                 else
                 {
