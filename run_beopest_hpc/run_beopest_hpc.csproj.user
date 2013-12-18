@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartArguments>-filePath:simple_slave -masterDir:simple_slave -execName:beopest32.exe -nodeDir:c:\home\user\jwhite\agu2011 -pestCase:pest  -userName:jwhite  -portNum:4002 -noMaster</StartArguments>
+    <StartArguments>-filePath:coarse_henry -masterDir:master -execName:pest.exe -nodeDir:D:\Users\jwhite\Projects\older\slaves -pestCase:this  -userName:jwhite  -portNum:4004 -noMaster -pestDir:test</StartArguments>
+    <StartWorkingDirectory>D:\Users\jwhite\Projects\older</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <StartWorkingDirectory>\\igsbamewms151\home\jwhite\beopest_test\</StartWorkingDirectory>
+    <StartWorkingDirectory>D:\Users\jwhite\Projects\older\coarse_henry</StartWorkingDirectory>
     <StartArguments>-noMaster -filePath:_paired_1 -nodeDir:C:\home\jwhite\test -pestCase:this -userName:jwhite -clusterName:IGSBAMEWMS151 -execName:beopest64.exe -updateOnly -numCores:h</StartArguments>
   </PropertyGroup>
 </Project>

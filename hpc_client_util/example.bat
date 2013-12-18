@@ -1,0 +1,2 @@
+rem (start number of cores) - 1 slaves in a directory on the slave machine :c:\home\jwhite\slaves
+hpc_client_util.exe -cmdExec:beopest64.exe -cmdArgs" mypestcase.pst /h IGSBAMEWMS152:4004" -src:\\IGSBAMEWMS152\home\jwhite\myperfectpestsestup\ -slavePath:c:\home\jwhite\slaves\ -n:-1

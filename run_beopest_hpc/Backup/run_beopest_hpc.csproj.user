@@ -1,0 +1,5 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartArguments>-filePath:simple_slave -masterDir:simple_slave -execName:beopest32.exe -nodeDir:c:\home\user\jwhite\agu2011 -pestCase:pest  -userName:jwhite  -portNum:4002 -noMaster</StartArguments>
+  </PropertyGroup>
+</Project>

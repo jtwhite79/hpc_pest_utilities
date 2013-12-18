@@ -1,0 +1,5 @@
+D:\Users\jwhite\git_repo\hpc_pest_utilities\hpc_client_util\hpc_client_util\bin\Release\hpc_client_util.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\hpc_client_util\hpc_client_util\bin\Release\hpc_client_util.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\hpc_client_util\hpc_client_util\obj\Release\hpc_client_util.csprojResolveAssemblyReference.cache
+D:\Users\jwhite\git_repo\hpc_pest_utilities\hpc_client_util\hpc_client_util\obj\Release\hpc_client_util.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\hpc_client_util\hpc_client_util\obj\Release\hpc_client_util.pdb

@@ -1,0 +1,13 @@
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\prep_hpc.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\prep_hpc.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\Microsoft.Hpc.Scheduler.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\Microsoft.Hpc.Scheduler.Internal.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\Microsoft.Hpc.Scheduler.Properties.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\Microsoft.Hpc.Scheduler.Session.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\Microsoft.Hpc.VSAddin.Deployment.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\Microsoft.Hpc.Scheduler.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\Microsoft.Hpc.Scheduler.Properties.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\bin\Release\Microsoft.Hpc.Scheduler.Session.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Release\prep_hpc.csprojResolveAssemblyReference.cache
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Release\prep_hpc.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\prep_hpc\obj\Release\prep_hpc.pdb

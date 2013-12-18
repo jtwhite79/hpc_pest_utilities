@@ -45,8 +45,6 @@ namespace run_beopest_hpc
             string clientArgs = null;
             //cluster UNC name
             string clusterName = null;
-            //pest dir within filePath
-            string pestDir = null;
             //number of cores to use on each node
             int numCores = -999;
             //port number
@@ -55,17 +53,12 @@ namespace run_beopest_hpc
             int delay = 0;
             //flag to potentially not starting a master
             bool masterFlag = true;
-            //flag to use existing node-side slave dirs
-            bool updateOnly = false;               
-            //flag for debugging - pauses after each job is submitted
-            bool jobWait = false;
-            //flag to remove working dirs when finished
-            bool remove = false;
+            //flag to potentially stagger start nodes
+            bool staggerFlag = false;
 
             if (parse_cmd_args(args, ref filePath, ref masterDir, ref nodeFile, ref nodeDir,ref execName,
                                ref numCores, ref pestCase,ref portNum, ref clientExe, ref clientArgs,
-                               ref clusterName, ref userName, ref password, ref delay, ref masterFlag, 
-                               ref updateOnly, ref jobWait, ref remove, ref pestDir) == false)
+                               ref clusterName, ref userName, ref password, ref delay, ref masterFlag, ref staggerFlag) == false)
             {
                 Console.WriteLine("parse cmd args fail...");
                 Console.WriteLine("required commandline args: -filePath:path to folder with complete set of files");
@@ -85,8 +78,7 @@ namespace run_beopest_hpc
                 Console.WriteLine("                           -clusterName:cluster UNC name (babeshn010)");
                 Console.WriteLine("                           -delay:time to wait after master start (0 seconds)");
                 Console.WriteLine("                           -noMaster:if passed, no master started, only slaves");
-                Console.WriteLine("                           -updateOnly:use existing node dirs and update newer files from headnode");
-                Console.WriteLine("                           -pestDir:the pest subdir within the filePath directory");
+                //Console.WriteLine("                           -stagger:if passed, each node will be start sequentially");
                 return;
             }
             //set clusterName
@@ -110,7 +102,7 @@ namespace run_beopest_hpc
                 Console.WriteLine("Enter network password:");
                 password = Convert.ToString(Console.Read());
             }
-            
+
 
             //get files in filePath
             string[] dataFiles = null;
@@ -125,36 +117,8 @@ namespace run_beopest_hpc
                 return;
             }
 
-
-
             // make sure pestCase.pst exists and execCmd exists
             bool execFlag = false, pstFlag = false;
-            string[] pestDirFiles = null;
-            if (pestDir != null)
-            {
-                string pestDirPath = filePath + "\\" + pestDir;
-                if (!Directory.Exists(pestDirPath))
-                {
-                    Console.WriteLine("filePath\\pestDir does not exists:\n    " + pestDirPath);
-                    return;
-                }
-                try
-                {
-                    pestDirFiles = Directory.GetFiles(pestDirPath);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unable to get file list for filePath\\pestDir:\n    " + pestDirPath);
-                    Console.WriteLine(e);
-                    return;
-                }
-                int i;
-            }
-            else
-            {
-                pestDirFiles = dataFiles;
-            }
-                
             foreach (string file in dataFiles)
             {
                 if (Path.GetFileName(file) == execName)
@@ -174,22 +138,20 @@ namespace run_beopest_hpc
             }
 
             //set numCores
-            //if (numCores == -999)
-            //{
-            //    numCores = Environment.ProcessorCount;
-            //}
-            //else if (numCores < 0)
-            //{
-            //    numCores = Environment.ProcessorCount - numCores;
-            //}
+            if (numCores == -999)
+            {
+                numCores = Environment.ProcessorCount;
+            }
+            else if (numCores < 0)
+            {
+                numCores = Environment.ProcessorCount - numCores;
+            }
 
             //setup master dir           
             string currentDir = Directory.GetCurrentDirectory();
             bool newMaster = false;
-            
-            if ((masterFlag) && (masterDir == null))
+            if ((masterDir == null) && (masterFlag == false))
             {
-                //if a master is needed and the masterDir is null, make a new master
                 masterDir = currentDir + @"\" + "master";
                 newMaster = true;
             
@@ -218,15 +180,15 @@ namespace run_beopest_hpc
                     return;
                 }
             }
-            //else
-            //{
+            else
+            {
              
-            //    if (Directory.Exists(masterDir) == false)
-            //    {
-            //        Console.WriteLine("Unable to find existing master dir:\n   "+masterDir);
-            //        return;
-            //    }
-            //}
+                if (Directory.Exists(masterDir) == false)
+                {
+                    Console.WriteLine("Unable to find existing master dir:\n   "+masterDir);
+                    return;
+                }
+            }
                 
             //try to find a copy of the node-side client
             string clientPath = null;
@@ -314,11 +276,8 @@ namespace run_beopest_hpc
             else
             {
                 Console.WriteLine("No master started.  Adding current path to masterDir");
-                masterDir = currentDir + @"\" + filePath;
+                masterDir = currentDir + @"\" + masterDir;
             }
-            string localHost = Environment.MachineName;
-            string test = get_master_unc(localHost, masterDir);
-
             
             //
             //
@@ -332,7 +291,6 @@ namespace run_beopest_hpc
                 // Make the scheduler and connect to the local host.
                 scheduler = new Scheduler();
                 scheduler.Connect(clusterName);
-                scheduler.SetClusterParameter("AffinityType", "NoJobs");
             }
             catch (Exception e)
             {
@@ -406,145 +364,131 @@ namespace run_beopest_hpc
                 if (masterFlag) master.Kill();               
                 return;
             }
-            
-            bool success = false;
-            string task;
-            string masterUnc = get_master_unc(localHost, masterDir);
 
-            if (!updateOnly)
+
+            if (!staggerFlag)
             {
 
                 //first remove existing node dir
                 //
-                
+                bool success = false;
                 string[] oneDirLevelUp = get_up_level_dir(nodeDir);
-                task = @"rmdir " + oneDirLevelUp[1] + " /S /Q";
+                string task = @"rmdir " + oneDirLevelUp[1] + " /S /Q";
                 Console.WriteLine("removing (possibly) existing nodeDir");
-                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true,"-rmdir");
+                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true);
                 if (success == false)
                 {
                     if (masterFlag) master.Kill();
-                    Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-                if (jobWait)
-                {
-                    Console.WriteLine("hit any key to continue");
-                    Console.ReadKey();
-                }
-
 
                 //now make the dir
                 //
 
                 task = @"mkdir " + oneDirLevelUp[1];
                 Console.WriteLine("making new nodeDir");
-                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true,"-mkdir");
+                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true);
                 if (success == false)
                 {
                     if (masterFlag) master.Kill();
-                    Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-                if (jobWait)
-                {
-                    Console.WriteLine("hit any key to continue");
-                    Console.ReadKey();
-                }
-                //now copy hpc_client_util to slaves
+
+                //now copy slaveCopyRun to slaves
                 //
-                
+                string localHost = Environment.MachineName;
                 string clientUnc = get_master_unc(localHost, clientPath);
                 task = @"copy " + clientUnc;
                 Console.WriteLine("Copying client to nodes");
-                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, true,"-clientCopy");
+                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, true);
                 if (success == false)
                 {
                     if (masterFlag) master.Kill();
-                    Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-                if (jobWait)
-                {
-                    Console.WriteLine("hit any key to continue");
-                    Console.ReadKey();
-                }
-                //start the slaves on each node
-                //               
+
+                //now finally run slaveCopyRun
+                //
+                string masterUnc = get_master_unc(localHost, masterDir);
                 Console.WriteLine("starting client util");
 
                 if (execArgs == null)
                     execArgs = " " + pestCase + " /h " + localHost + ":" + portNum;
 
-                task = clientExe + " -src:" + masterUnc;
-                if (numCores != -999)
-                {
-                    task = task + " -n:" + numCores;
-                }
-                if (remove)
-                {
-                    task = task + "-rmDir";
-                }
-                if (pestDir != null)
-                {
-                    task = task + "-slavePath:" + pestDir;
-                }
-                task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"";                
-                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-run");
+                task = clientExe+" -src:" + masterUnc + " ";
+                task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"";
+                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false);
                 if (success == false)
                 {
                     master.Kill();
-                    Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-                if (jobWait)
-                {
-                    Console.WriteLine("hit any key to continue");
-                    Console.ReadKey();
-                }
             }
+
+            //if nodes are stagger started
             else
             {
-                Console.WriteLine("using existing directory structure and hpc_client_util, updating files only...");                
-                Console.WriteLine("starting client util to update localMaster");
 
-                if (execArgs == null)
-                    execArgs = " " + pestCase + " /h " + localHost + ":" + portNum;
+                for (int i = 0; i < requestedNodes.Count; i++)
+                {
+                    List<string> rnode = new List<string> { requestedNodes[i] };
 
-                task = clientExe + " -src:" + masterUnc + " ";
-                task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"" + " -updateOnly -n:0";
-                
-                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-updateLocal");
-                if (success == false)
-                {
-                    master.Kill();
-                    Console.WriteLine("Error execucting task: " + task);
-                    return;
-                }
+                    //first remove existing node dir
+                    //
+                    bool success = false;
+                    string[] oneDirLevelUp = get_up_level_dir(nodeDir);
+                    string task = @"rmdir " + oneDirLevelUp[1] + " /S /Q";
+                    Console.WriteLine("removing (possibly) existing nodeDir");
+                    success = submit_job(scheduler, task, oneDirLevelUp[0], rnode, userName, password, true);
+                    if (success == false)
+                    {
+                        if (masterFlag) master.Kill();
+                        return;
+                    }
 
-                Console.WriteLine("starting client util to update local node dirs and start slaves");
-                if (execArgs == null)
-                    execArgs = " " + pestCase + " /h " + localHost + ":" + portNum;
+                    //now make the dir
+                    //
 
-                task = clientExe;
-                task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"" + " -updateOnly";
-                if (numCores != -999)
-                {
-                    task = task + " -n:" + numCores;
-                }
-                if (pestDir != null)
-                {
-                    task = task + "-slavePath:" + pestDir;
-                }
-                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-updateAndRun");
-                if (success == false)
-                {
-                    master.Kill();
-                    Console.WriteLine("Error execucting task: " + task);
-                    return;
+                    task = @"mkdir " + oneDirLevelUp[1];
+                    Console.WriteLine("making new nodeDir");
+                    success = submit_job(scheduler, task, oneDirLevelUp[0], rnode, userName, password, true);
+                    if (success == false)
+                    {
+                        if (masterFlag) master.Kill();
+                        return;
+                    }
+
+                    //now copy slaveCopyRun to slaves
+                    //
+                    string localHost = Environment.MachineName;
+                    string clientUnc = get_master_unc(localHost, clientPath);
+                    task = @"copy " + clientUnc;
+                    Console.WriteLine("Copying client to nodes");
+                    success = submit_job(scheduler, task, nodeDir, rnode, userName, password, true);
+                    if (success == false)
+                    {
+                        if (masterFlag) master.Kill();
+                        return;
+                    }
+
+                    //now finally run slaveCopyRun
+                    //
+                    string masterUnc = get_master_unc(localHost, masterDir);
+                    Console.WriteLine("starting slaveCopyRun");
+
+                    if (execArgs == null)
+                        execArgs = " " + pestCase + " /h " + localHost + ":" + portNum;
+
+                    task = clientExe+" -src:" + masterUnc + " ";
+                    task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"";
+                    success = submit_job(scheduler, task, nodeDir, rnode, userName, password, false);
+                    if (success == false)
+                    {
+                        master.Kill();
+                        return;
+                    }
                 }
             }
-
             while (true)
             {
                 try
@@ -559,17 +503,18 @@ namespace run_beopest_hpc
                 }
             
             }
-  
+
+
+
+            
             return;
        }
-
 
         private static string get_master_unc(string localHost, string masterDir)
         {
             //string localHost = Environment.MachineName;
             string[] split = masterDir.Split('\\');
-            string parition = split[0].Replace(':', '$');
-            StringBuilder masterUnc = new StringBuilder(@"\\"+localHost+"\\"+parition);
+            StringBuilder masterUnc = new StringBuilder(@"\\"+localHost);
             for (int i = 1; i < split.Length; i++)
             {
                 masterUnc.Append(@"\" + split[i]);
@@ -578,8 +523,9 @@ namespace run_beopest_hpc
         }
 
 
+
         private static bool submit_job(IScheduler scheduler, string taskName, string workDir, List<string> requestedNodes,
-                                       string userName, string password,bool waitFlag,string taskSuffix="")
+                                       string userName, string password,bool waitFlag)
         {
             try
             {
@@ -593,12 +539,11 @@ namespace run_beopest_hpc
 
                     job = scheduler.CreateJob();
                     job.UnitType = JobUnitType.Node;
-                    job.IsExclusive = true;  
-                   
+                    job.IsExclusive = true;                    
                     StringCollection nodes = new StringCollection() { node };
                     Console.WriteLine("    node: " + node);
                     job.RequestedNodes = nodes;
-                    job.Name = node + taskSuffix;
+                    job.Name = node;
                     task = job.CreateTask();
                     task.CommandLine = taskName;
                     task.WorkDirectory = workDir;
@@ -609,16 +554,7 @@ namespace run_beopest_hpc
                     scheduler.SubmitJob(job, userName, password);
 
                 }
-                if (waitFlag)
-                {
-                    Console.WriteLine("Waiting for job to finish...");
-                    while (job.State != JobState.Finished)
-                    {
-                        System.Threading.Thread.Sleep(5000);                        
-
-                    }
-                }
-
+                
                 //manualEvent.WaitOne();
                 return true;
             }
@@ -811,8 +747,7 @@ namespace run_beopest_hpc
                                           ref string clientExe, ref string clientArgs,
                                           ref string clusterName, ref string userName,
                                           ref string password, ref int delay, 
-                                          ref bool masterFlag, ref bool updateOnly,
-                                          ref bool jobWait, ref bool remove, ref string pestDir)
+                                          ref bool masterFlag, ref bool staggerFlag)
         {
             string tag = null;
             string cmd = null;
@@ -923,19 +858,12 @@ namespace run_beopest_hpc
                     }
                     catch (Exception e)
                     {
-                        if ((cmd == "h") || (cmd == "H"))
-                        {
-                            numCores = -100;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Unable to parse numCores argument to int: " + cmd);
-                            Console.WriteLine(e);
-                            return false;
-                        }
+                        Console.WriteLine("Unable to parse numCores argument to int: " + cmd);
+                        Console.WriteLine(e);
+                        return false;
                     }
                 }
-                
+
                 //else if (tag == "delay")
                 else if (String.Compare(tag,"delay",true) == 0)
                 {
@@ -971,27 +899,13 @@ namespace run_beopest_hpc
                 {
                     masterFlag = false;
                 }
-                else if (String.Compare(tag, "updateOnly", true) == 0)
+                else if (tag == "stagger")
                 {
-                    updateOnly = true;
+                    staggerFlag = true;
                 }
 
-                else if (String.Compare(tag, "jobWait", true) == 0)
-                {
-                    jobWait = true;
-                }
 
-                else if (String.Compare(tag, "remove", true) == 0)
-                {
-                    remove = true;
-                }
 
-                else if (String.Compare(tag, "pestDir", true) == 0)
-                {
-                    pestDir = cmd;
-                }    
-
-                
                 else
                 {
                     Console.WriteLine("Unrecognized tag: " + tag);

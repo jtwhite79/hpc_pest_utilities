@@ -330,15 +330,16 @@ namespace hpc_client_util
                         Console.WriteLine("Starting slave: " + thisSlaveDir);
                         Console.WriteLine("with commandLineExec: " + commandLineExec);
                         Console.WriteLine("and with commandLineArgs: " + commandLineArgs);
-
+                           
                         Process thisSlave = new Process();
                         //thisSlave.StartInfo.UseShellExecute = false;
 
                         if (slavePath != null)
                         {
                             thisSlaveDir = thisSlaveDir + @"\" + slavePath;
+                            
                         }
-
+                        Console.WriteLine("in directory: " + thisSlaveDir);
 
                         //the name and path of the beopest exec
                         thisSlave.StartInfo.FileName = thisSlaveDir + @"\" + commandLineExec;
