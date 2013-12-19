@@ -286,6 +286,10 @@ namespace run_beopest_hpc
                 string masterCmd = " " + pestCase + " /h  :" + portNum;                
                 try
                 {
+                    if (pestDir != null)
+                    {
+                        masterDir = masterDir + "\\" + pestDir;
+                    }
                     master = run_wait(masterDir, execName, masterCmd, delay);
                     Console.WriteLine(master.Id);
 

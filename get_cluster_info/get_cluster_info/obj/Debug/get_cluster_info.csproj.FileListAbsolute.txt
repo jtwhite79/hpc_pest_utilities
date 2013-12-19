@@ -1,0 +1,14 @@
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\get_cluster_info.exe.config
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\get_cluster_info.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\get_cluster_info.pdb
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\Microsoft.Hpc.Scheduler.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\Microsoft.Hpc.Scheduler.Internal.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\Microsoft.Hpc.Scheduler.Properties.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\Microsoft.Hpc.Scheduler.Session.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\Microsoft.Hpc.VSAddin.Deployment.dll
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\Microsoft.Hpc.Scheduler.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\Microsoft.Hpc.Scheduler.Properties.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\bin\Debug\Microsoft.Hpc.Scheduler.Session.xml
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\obj\Debug\get_cluster_info.csprojResolveAssemblyReference.cache
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\obj\Debug\get_cluster_info.exe
+D:\Users\jwhite\git_repo\hpc_pest_utilities\get_cluster_info\get_cluster_info\obj\Debug\get_cluster_info.pdb
