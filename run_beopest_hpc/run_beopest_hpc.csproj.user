@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartArguments>-filePath:coarse_henry -masterDir:master -execName:pest.exe -nodeDir:D:\Users\jwhite\Projects\older\slaves -pestCase:this  -userName:jwhite  -portNum:4004 -noMaster -pestDir:test</StartArguments>
-    <StartWorkingDirectory>D:\Users\jwhite\Projects\older</StartWorkingDirectory>
+    <StartArguments>-filePath:Hydro_model -masterDir:master -execName:pest.exe -nodeDir:D:\Data\CUVHM -pestCase:this  -userName:jwhite  -portNum:4004 -noMaster -pestDir:Model_Pconf\pest\</StartArguments>
+    <StartWorkingDirectory>D:\Data</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <RemoteDebugEnabled>false</RemoteDebugEnabled>

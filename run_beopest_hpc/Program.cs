@@ -141,21 +141,21 @@ namespace run_beopest_hpc
                 try
                 {
                     pestDirFiles = Directory.GetFiles(pestDirPath);
+                    int i = 0;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Unable to get file list for filePath\\pestDir:\n    " + pestDirPath);
                     Console.WriteLine(e);
                     return;
-                }
-                int i;
+                }              
             }
             else
             {
                 pestDirFiles = dataFiles;
             }
                 
-            foreach (string file in dataFiles)
+            foreach (string file in pestDirFiles)
             {
                 if (Path.GetFileName(file) == execName)
                     execFlag = true;
