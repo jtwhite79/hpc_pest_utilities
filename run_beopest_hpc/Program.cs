@@ -89,6 +89,8 @@ namespace run_beopest_hpc
                 Console.WriteLine("                           -pestDir:the pest subdir within the filePath directory");
                 return;
             }
+           
+
             //set clusterName
             if (clusterName == null)
                 clusterName = "IGSBABESHN010";
@@ -110,7 +112,33 @@ namespace run_beopest_hpc
                 Console.WriteLine("Enter network password:");
                 password = Convert.ToString(Console.Read());
             }
-            
+
+
+            //try to connect to the cluster first
+            IScheduler scheduler = null;
+            try
+            {
+                // Make the scheduler and connect to the local host.
+                scheduler = new Scheduler();
+                scheduler.Connect(clusterName);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unable to connect to cluster:\n   " + clusterName);
+                Console.WriteLine(e);
+                return;
+            }
+            try
+            {
+                scheduler.SetClusterParameter("AffinityType", "NoJobs");
+            }
+            catch
+            {
+                Console.WriteLine("Warning - Unable to set scheduler AffinityType");
+            }
+
+
 
             //get files in filePath
             string[] dataFiles = null;
@@ -330,23 +358,8 @@ namespace run_beopest_hpc
             //
             //
 
-            IScheduler scheduler = null;
-            try
-            {
-                // Make the scheduler and connect to the local host.
-                scheduler = new Scheduler();
-                scheduler.Connect(clusterName);
-                scheduler.SetClusterParameter("AffinityType", "NoJobs");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Unable to connect to cluster:\n   " + clusterName);
-                Console.WriteLine(e);
-                master.Kill();
-                return;
-            }
 
-           
+
             List<string> clusterNodes = new List<string>();
             // Get all the nodes in the compute node group.
 
