@@ -437,18 +437,14 @@ namespace run_beopest_hpc
                 string[] oneDirLevelUp = get_up_level_dir(nodeDir);
                 task = @"rmdir " + oneDirLevelUp[1] + " /S /Q";
                 Console.WriteLine("removing (possibly) existing nodeDir");
-                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true,"-rmdir");
+                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, jobWait,"-rmdir");
                 if (success == false)
                 {
                     if (masterFlag) master.Kill();
                     Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-                if (jobWait)
-                {
-                    Console.WriteLine("hit any key to continue");
-                    Console.ReadKey();
-                }
+                
 
 
                 //now make the dir
@@ -456,36 +452,27 @@ namespace run_beopest_hpc
 
                 task = @"mkdir " + oneDirLevelUp[1];
                 Console.WriteLine("making new nodeDir");
-                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, true,"-mkdir");
+                success = submit_job(scheduler, task, oneDirLevelUp[0], requestedNodes, userName, password, jobWait,"-mkdir");
                 if (success == false)
                 {
                     if (masterFlag) master.Kill();
                     Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-                if (jobWait)
-                {
-                    Console.WriteLine("hit any key to continue");
-                    Console.ReadKey();
-                }
-                //now copy hpc_client_util to slaves
-                //
                 
+                //now copy hpc_client_util to slaves
+                //                
                 string clientUnc = get_master_unc(localHost, clientPath);
                 task = @"copy " + clientUnc;
                 Console.WriteLine("Copying client to nodes");
-                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, true,"-clientCopy");
+                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, jobWait,"-clientCopy");
                 if (success == false)
                 {
                     if (masterFlag) master.Kill();
                     Console.WriteLine("Error execucting task: " + task);
                     return;
                 }
-                if (jobWait)
-                {
-                    Console.WriteLine("hit any key to continue");
-                    Console.ReadKey();
-                }
+                
                 //start the slaves on each node
                 //               
                 Console.WriteLine("starting client util");
@@ -507,18 +494,13 @@ namespace run_beopest_hpc
                     task = task + "-slavePath:" + pestDir;
                 }
                 task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"";                
-                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-run");
+                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, jobWait,"-run");
                 if (success == false)
                 {
                     master.Kill();
                     Console.WriteLine("Error execucting task: " + task);
                     return;
-                }
-                if (jobWait)
-                {
-                    Console.WriteLine("hit any key to continue");
-                    Console.ReadKey();
-                }
+                }                
             }
             else
             {
@@ -531,7 +513,7 @@ namespace run_beopest_hpc
                 task = clientExe + " -src:" + masterUnc + " ";
                 task = task + " -cmdExec:" + execName + " -cmdArgs:\"" + execArgs + "\"" + " -updateOnly -n:0";
                 
-                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-updateLocal");
+                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, jobWait,"-updateLocal");
                 if (success == false)
                 {
                     master.Kill();
@@ -553,7 +535,7 @@ namespace run_beopest_hpc
                 {
                     task = task + "-slavePath:" + pestDir;
                 }
-                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, false,"-updateAndRun");
+                success = submit_job(scheduler, task, nodeDir, requestedNodes, userName, password, jobWait,"-updateAndRun");
                 if (success == false)
                 {
                     master.Kill();
@@ -626,14 +608,19 @@ namespace run_beopest_hpc
                     scheduler.SubmitJob(job, userName, password);
 
                 }
+                //if (waitFlag)
+                //{
+                //    Console.WriteLine("Waiting for job to finish...");
+                //    while (job.State != JobState.Finished)
+                //    {
+                //        System.Threading.Thread.Sleep(5000);                        
+
+                //    }
+                //}
                 if (waitFlag)
                 {
-                    Console.WriteLine("Waiting for job to finish...");
-                    while (job.State != JobState.Finished)
-                    {
-                        System.Threading.Thread.Sleep(5000);                        
-
-                    }
+                    Console.WriteLine("hit any key to continue");
+                    Console.ReadKey();
                 }
 
                 //manualEvent.WaitOne();
